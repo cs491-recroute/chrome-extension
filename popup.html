@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/styles/popup.css">
+  </head>
+  <body>
+    <div id="apiKeyFound">
+        <p>
+            Your API key is: <span id="apiKey"></span>
+        </p>
+        <button id="apiKeyReset">Reset API key</button>
+    </div>
+    <div id="apiKeyMissing">
+        <h1>API Key Missing</h1>
+        <p>
+            Please enter your API key below to continue.
+        </p>
+        <input id="newApiKeyInput" />
+        <button id="apiKeySubmit">Continue</button>
+    </div>
+  </body>
+  <script src='popup.js'></script>
+</html>

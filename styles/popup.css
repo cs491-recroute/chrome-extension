@@ -1,0 +1,36 @@
+#apiKeyInput {
+    width: 500px;
+}
+
+body {
+    width: 350px;
+}
+
+#apiKey {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+button {
+    padding: 10px;
+    background-color: #0a66c2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    height: 40px;
+    cursor: pointer;
+}
+
+p {
+    font-size: 16px;
+}
+
+input {
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #0a66c2;
+    width: 230px;
+    font-size: 14px;
+}
