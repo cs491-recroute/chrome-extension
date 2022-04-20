@@ -11,12 +11,12 @@ chrome.storage.sync.get('apiKey', function(result) {
         chrome.storage.sync.set({ apiKey: input.value }, function() {
             document.querySelector('#apiKeyMissing').style.display = 'none';
             document.querySelector('#apiKeyFound').style.display = 'block';
-            document.querySelector('#apiKey').innerHTML = input.value;
+            document.querySelector('#apiKey').textContent = input.value;
         });
     });
     if (result.apiKey) {
         document.querySelector('#apiKeyMissing').style.display = 'none';
-        document.querySelector('#apiKey').innerHTML = result.apiKey;
+        document.querySelector('#apiKey').textContent = result.apiKey;
     } else {
         document.querySelector('#apiKeyFound').style.display = 'none';
     }

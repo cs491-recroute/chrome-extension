@@ -35,25 +35,29 @@ const retrieveMail = async () => {
     return href.split(":")[1];
 };
 
+let timeout;
+const showResponseInfo = (text, isError) => {
+    clearTimeout(timeout);
+    const container = document.querySelector('#recroute-infoContainer');
+    if (isError) {
+        container.classList.add('error');
+    } else {
+        container.classList.remove('error');
+    }
+    container.textContent = text;
+
+    timeout = setTimeout(() => {
+        container.textContent = '';
+    }, 2000);
+}
+
 const createFlowSelectionHTML = async (container, apiKey) => {
     let activeFlows = [];
     try {
-        // TODO: Fetch active flows
-        // const response = await fetch('ENDPOINT');
-        // activeFlows = await response.json();
-        
-        activeFlows = [
-            {
-                "_id": "62489d583f3474ce0cd64c02",
-                "name": "Ahmet Active"
-            },
-            {
-                "_id": "6255f7bd62dd1f2f7407fc4c",
-                "name": "Aybars Flow - 2"
-            }
-        ];
+        const response = await fetch(`https://recroute.co:3501/activeFlows/${apiKey}`);
+        activeFlows = await response.json();
     } catch (error) {
-        container.append('API key is not valid!');
+        container.append('Oops! Error while retrieving active flows.');
         return;
     }
 
@@ -62,19 +66,6 @@ const createFlowSelectionHTML = async (container, apiKey) => {
         return;
     };
 
-    // Create send button
-    button = document.createElement('button');
-    button.id = 'recroute-sendButton';
-    button.innerText = 'Send Invitation';
-    button.addEventListener('click', async () => {
-        const flow = document.querySelector('#recroute-flowSelector').value;
-        if (!flow) return;
-
-        const mail = await retrieveMail();
-        console.log({ mail, flow, apiKey });
-        // TODO: Send HTTP request to server with mail and flowID
-    });
-    
     // Create flow selector
     const select = document.createElement('select');
     select.id = 'recroute-flowSelector';
@@ -87,10 +78,42 @@ const createFlowSelectionHTML = async (container, apiKey) => {
         option.innerText = flow.name;
         select.append(option);
     });
-
     container.append(select);
-    container.append(button);
     $('select').niceSelect();
+
+    // Create send button
+    button = document.createElement('button');
+    button.id = 'recroute-sendButton';
+    button.innerText = 'Send Invitation';
+    button.addEventListener('click', async () => {
+        const flow = document.querySelector('#recroute-flowSelector').value;
+        if (!flow) {
+            showResponseInfo('Please select a flow!', true);
+            return;
+        }
+
+        const mail = await retrieveMail();
+        if (!mail) {
+            showResponseInfo('Could not retrieve mail!', true);
+            return;
+        }
+
+        fetch(`https://recroute.co:3501/flow/${flow}/invite/${mail}?apiKey=${apiKey}`, { method: 'POST' })
+            .then(response => {
+                if (response.status === 200) {
+                    showResponseInfo('Invitation sent!', false);
+                } else {
+                    showResponseInfo('Oops! Error while sending invitation.', true);
+                }
+            })
+    });
+    container.append(button);
+
+    // Create info container
+    const infoContainer = document.createElement('div');
+    infoContainer.id = 'recroute-infoContainer';
+    container.append(infoContainer);
+    
 }
 
 const run = async () => {
@@ -101,7 +124,7 @@ const run = async () => {
         const container = document.querySelector('#recroute-container');
     
         // Initialize inside of the modal
-        container.innerHTML = '';
+        container.textContent = '';
     
         const apiKey = await getAPIKey();
     

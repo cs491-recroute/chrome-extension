@@ -1,3 +1,14 @@
+#recroute-infoContainer {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    color: green;
+}
+
+#recroute-infoContainer.error {
+    color: red;
+}
+
 #recroute-sendButton {
     margin-top: 10px;
     padding: 10px;
